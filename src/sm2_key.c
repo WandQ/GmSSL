@@ -426,6 +426,15 @@ int sm2_public_key_info_to_der(const SM2_KEY *pub_key, uint8_t **out, size_t *ou
 	return 1;
 }
 
+int sm2_public_key_info_to_der_for_go(const SM2_KEY *pub_key, uint8_t *out, size_t *outlen)
+{
+	if (sm2_public_key_info_to_der(pub_key, &out, outlen) != 1) {
+		error_print();
+		return -1;
+	}
+	return 1;
+}
+
 int sm2_public_key_info_from_der(SM2_KEY *pub_key, const uint8_t **in, size_t *inlen)
 {
 	int ret;
@@ -439,6 +448,15 @@ int sm2_public_key_info_from_der(SM2_KEY *pub_key, const uint8_t **in, size_t *i
 	if (sm2_public_key_algor_from_der(&d, &dlen) != 1
 		|| sm2_public_key_from_der(pub_key, &d, &dlen) != 1
 		|| asn1_length_is_zero(dlen) != 1) {
+		error_print();
+		return -1;
+	}
+	return 1;
+}
+
+int sm2_public_key_info_from_der_for_go(const SM2_KEY *pub_key, uint8_t *in, size_t *inlen)
+{
+	if (sm2_public_key_info_from_der(pub_key, &in, inlen) != 1) {
 		error_print();
 		return -1;
 	}
@@ -540,6 +558,15 @@ int sm2_public_key_digest(const SM2_KEY *sm2_key, uint8_t dgst[32])
 	return 1;
 }
 
+int sm2_private_key_info_encrypt_to_der_for_go(const SM2_KEY *sm2_key, const char *pass, uint8_t *out, size_t *outlen)
+{
+	if (sm2_private_key_info_encrypt_to_der(sm2_key, pass, &out, outlen) != 1) {
+		error_print();
+		return -1;
+	}
+	return 1;
+}
+
 int sm2_private_key_info_encrypt_to_der(const SM2_KEY *sm2_key, const char *pass,
 	uint8_t **out, size_t *outlen)
 {
@@ -591,6 +618,18 @@ end:
 	gmssl_secure_clear(key, sizeof(key));
 	gmssl_secure_clear(&sm4_key, sizeof(sm4_key));
 	return ret;
+}
+
+int sm2_private_key_info_decrypt_from_der_for_go(SM2_KEY *key, const char *pass, uint8_t *in, size_t *inlen)
+{
+	const uint8_t *attrs;
+	size_t attrs_len;
+	if (sm2_private_key_info_decrypt_from_der(key, &attrs, &attrs_len, pass, &in, inlen) != 1
+		|| asn1_length_is_zero(*inlen) != 1) {
+		error_print();
+		return -1;
+	}
+	return 1;
 }
 
 int sm2_private_key_info_decrypt_from_der(SM2_KEY *sm2,

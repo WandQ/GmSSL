@@ -248,6 +248,8 @@ SubjectPublicKeyInfo  ::=  SEQUENCE  {
 	subjectPublicKey     BIT STRING  -- uncompressed octets of ECPoint }
 */
 _gmssl_export int sm2_public_key_info_to_der(const SM2_KEY *a, uint8_t **out, size_t *outlen);
+_gmssl_export int sm2_public_key_info_to_der_for_go(const SM2_KEY *pub_key, uint8_t *out, size_t *outlen);
+_gmssl_export int sm2_public_key_info_from_der_for_go(const SM2_KEY *pub_key, uint8_t *in, size_t *inlen);
 _gmssl_export int sm2_public_key_info_from_der(SM2_KEY *a, const uint8_t **in, size_t *inlen);
 _gmssl_export int sm2_public_key_info_to_pem(const SM2_KEY *a, FILE *fp);
 _gmssl_export int sm2_public_key_info_from_pem(SM2_KEY *a, FILE *fp);
@@ -280,12 +282,14 @@ EncryptedPrivateKeyInfo ::= SEQUENCE {
 */
 _gmssl_export int sm2_private_key_info_encrypt_to_der(const SM2_KEY *key,
 	const char *pass, uint8_t **out, size_t *outlen);
+_gmssl_export int sm2_private_key_info_encrypt_to_der_for_go(const SM2_KEY *key, 
+const char *pass, uint8_t *out, size_t *outlen);
 _gmssl_export int sm2_private_key_info_decrypt_from_der(SM2_KEY *key, const uint8_t **attrs, size_t *attrs_len,
 	const char *pass, const uint8_t **in, size_t *inlen);
+_gmssl_export int sm2_private_key_info_decrypt_from_der_for_go(SM2_KEY *key, const char *pass, uint8_t *in, size_t *inlen);
 _gmssl_export int sm2_private_key_info_encrypt_to_pem(const SM2_KEY *key, const char *pass, FILE *fp);
 // FIXME: #define default buffer size
 _gmssl_export int sm2_private_key_info_decrypt_from_pem(SM2_KEY *key, const char *pass, FILE *fp);
-
 
 typedef struct {
 	uint8_t r[32];
